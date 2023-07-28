@@ -23,12 +23,10 @@ class VideoCallHomeScreen extends StatefulWidget {
 class _VideoCallHomeScreenState extends State<VideoCallHomeScreen> {
   final serverText = TextEditingController();
   final roomText = TextEditingController();
-  final subjectText =
-      TextEditingController(text: "Video Conference with Client");
+  final subjectText = TextEditingController(text: "Video Conference with Client");
   final nameText = TextEditingController();
   final emailText = TextEditingController(text: "fake@email.com");
-  final iosAppBarRGBAColor =
-      TextEditingController(text: "#0080FF80"); //transparent blue
+  final iosAppBarRGBAColor = TextEditingController(text: "#0080FF80"); //transparent blue
   final dateTimeText = TextEditingController(text: DateTime.now().toString());
   String roomLink = "";
   bool? isAudioOnly = true;
@@ -41,11 +39,7 @@ class _VideoCallHomeScreenState extends State<VideoCallHomeScreen> {
   void initState() {
     super.initState();
     JitsiMeet.addListener(
-      JitsiMeetingListener(
-          onConferenceWillJoin: _onConferenceWillJoin,
-          onConferenceJoined: _onConferenceJoined,
-          onConferenceTerminated: _onConferenceTerminated,
-          onError: _onError),
+      JitsiMeetingListener(onConferenceWillJoin: _onConferenceWillJoin, onConferenceJoined: _onConferenceJoined, onConferenceTerminated: _onConferenceTerminated, onError: _onError),
     );
   }
 
@@ -119,11 +113,7 @@ class _VideoCallHomeScreenState extends State<VideoCallHomeScreen> {
                                     height: size.height * 0.75,
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
-                                        image: isJoinMeetingClicked
-                                            ? const AssetImage(
-                                                "assets/launchRocket.gif")
-                                            : const AssetImage(
-                                                "assets/videoIcon.gif"),
+                                        image: isJoinMeetingClicked ? const AssetImage("assets/launchRocket.gif") : const AssetImage("assets/videoIcon.gif"),
                                       ),
                                     ),
                                     child: JitsiMeetConferencing(
@@ -207,24 +197,20 @@ class _VideoCallHomeScreenState extends State<VideoCallHomeScreen> {
               setState(() {
                 isInvited = true;
               });
-              String formattedTime = DateFormat.yMEd()
-                  .add_jm()
-                  .format(DateTime.parse(dateTimeText.text));
-              // final response = await sendEmail(
-              //   fromName: args['architectsName'],
-              //   toName: args['clientsName'],
-              //   toEmail: args['clientsEmail'],
-              //   message:
-              //       "Let's connect on $formattedTime using Jitsi Meet. Room Link: $roomLink",
-              // );
-              final response = 200;
+              String formattedTime = DateFormat.yMEd().add_jm().format(DateTime.parse(dateTimeText.text));
+              final response = await sendEmail(
+                fromName: args['architectsName'],
+                toName: args['clientsName'],
+                toEmail: args['clientsEmail'],
+                message: "Let's connect on $formattedTime using Jitsi Meet. Room Link: $roomLink",
+              );
+              // final response = 200;
               response == 200
                   ? scaffoldMessengerVar.showSnackBar(
                       SnackBar(
                         content: AwesomeSnackbarContent(
                           title: 'Hurray!',
-                          message:
-                              "Invited ${args['clientsName']} on $formattedTime",
+                          message: "Invited ${args['clientsName']} on $formattedTime",
                           contentType: ContentType.success,
                         ),
                         behavior: SnackBarBehavior.floating,
@@ -254,13 +240,8 @@ class _VideoCallHomeScreenState extends State<VideoCallHomeScreen> {
               ),
             ),
             child: Text(
-              isInvited
-                  ? "Inviting ${args['clientsName']}...."
-                  : "Invite ${args['clientsName']}",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(color: Theme.of(context).primaryColor),
+              isInvited ? "Inviting ${args['clientsName']}...." : "Invite ${args['clientsName']}",
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).primaryColor),
             ),
           ),
         ),
@@ -284,10 +265,7 @@ class _VideoCallHomeScreenState extends State<VideoCallHomeScreen> {
             ),
             child: Text(
               "Launch Meet",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(color: Theme.of(context).primaryColor),
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).primaryColor),
             ),
           ),
         ),
@@ -389,19 +367,12 @@ class _VideoCallHomeScreenState extends State<VideoCallHomeScreen> {
     const templateId = 'template_76giubj';
     const userId = 'Lw4TOd4fvd60QUhWf';
     final response = await http.post(url,
-        headers: {
-          'Content-Type': 'application/json'
-        }, //This line makes sure it works for all platforms.
+        headers: {'Content-Type': 'application/json'}, //This line makes sure it works for all platforms.
         body: json.encode({
           'service_id': serviceId,
           'template_id': templateId,
           'user_id': userId,
-          'template_params': {
-            'from_name': fromName,
-            'to_name': toName,
-            'reply_to': toEmail,
-            'message': message
-          }
+          'template_params': {'from_name': fromName, 'to_name': toName, 'reply_to': toEmail, 'message': message}
         }));
     return response.statusCode;
   }

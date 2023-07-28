@@ -97,10 +97,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _registerationController.text = userData["regNum"].toString();
         _experienceController.text = userData["exp"].toString();
         _cityController.text = userData["address"]["city"].toString();
-        _companyNameController.text =
-            userData["address"]["companyName"].toString();
-        _streetController.text =
-            userData["address"]["companyStreetAddress"].toString();
+        _companyNameController.text = userData["address"]["companyName"].toString();
+        _streetController.text = userData["address"]["companyStreetAddress"].toString();
         _countryController.text = userData["address"]["country"].toString();
         _stateController.text = userData["address"]["state"].toString();
         _zipcodeController.text = userData["address"]["zipCode"].toString();
@@ -116,9 +114,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     return isErrorOccured
-        ? const ErrorScreen(
-            screenToBeRendered: ExploreModelsScreen.routeName,
-            renderScreenName: "Home Page")
+        ? const ErrorScreen(screenToBeRendered: ExploreModelsScreen.routeName, renderScreenName: "Home Page")
         : Scaffold(
             // resizeToAvoidBottomInset: true,
             body: GestureDetector(
@@ -148,8 +144,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   // setState(() {});
                                 },
                                 child: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(_imageController.text),
+                                  backgroundImage: NetworkImage(_imageController.text),
                                   radius: 80,
                                 ),
                               ),
@@ -192,8 +187,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   if (value != null && value.isEmpty) {
                                     return "Please enter your name";
                                   }
-                                  if (!RegExp(r'^[a-zA-Z\s]+$')
-                                      .hasMatch(value!)) {
+                                  if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value!)) {
                                     return 'Please enter alphabets only(spaces allowed)';
                                   }
                                   return null;
@@ -260,8 +254,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   if (value != null && value.isEmpty) {
                                     return 'Please enter your city';
                                   }
-                                  if (!RegExp(r'^[a-zA-Z\s]+$')
-                                      .hasMatch(value!)) {
+                                  if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value!)) {
                                     return 'Please enter alphabets only(spaces allowed)';
                                   }
                                   return null; // Return null if the input is valid
@@ -281,8 +274,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   if (value != null && value.isEmpty) {
                                     return 'Please enter your company name';
                                   }
-                                  if (!RegExp(r'^[a-zA-Z\s]+$')
-                                      .hasMatch(value!)) {
+                                  if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value!)) {
                                     return 'Please enter alphabets only(spaces allowed)';
                                   }
                                   return null; // Return null if the input is valid
@@ -318,8 +310,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   if (value != null && value.isEmpty) {
                                     return 'Please enter your country';
                                   }
-                                  if (!RegExp(r'^[a-zA-Z\s]+$')
-                                      .hasMatch(value!)) {
+                                  if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value!)) {
                                     return 'Please enter alphabets only(spaces allowed)';
                                   }
                                   return null; // Return null if the input is valid
@@ -339,8 +330,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   if (value != null && value.isEmpty) {
                                     return 'Please enter your state';
                                   }
-                                  if (!RegExp(r'^[a-zA-Z\s]+$')
-                                      .hasMatch(value!)) {
+                                  if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value!)) {
                                     return 'Please enter alphabets only(spaces allowed)';
                                   }
                                   return null; // Return null if the input is valid
@@ -370,22 +360,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   return null; // Return null if the input is valid
                                 },
                               ),
-                              SizedBox(
-                                height: size.height * 0.02,
-                              ),
-                              //TextFormField
-                              _buildTextFormField(
-                                _imageController,
-                                TextInputType.name,
-                                "Image Url",
-                                false,
-                                (value) {
-                                  if (value != null && value.isEmpty) {
-                                    return "Please enter an Image Url";
-                                  }
-                                  return null;
-                                },
-                              ),
+                              // SizedBox(
+                              //   height: size.height * 0.02,
+                              // ),
+                              // //TextFormField
+                              // _buildTextFormField(
+                              //   _imageController,
+                              //   TextInputType.name,
+                              //   "Image Url",
+                              //   false,
+                              //   (value) {
+                              //     if (value != null && value.isEmpty) {
+                              //       return "Please enter an Image Url";
+                              //     }
+                              //     return null;
+                              //   },
+                              // ),
                               SizedBox(
                                 height: size.height * 0.02,
                               ),
@@ -394,9 +384,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 margin: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
-                                  color: _skills.isNotEmpty
-                                      ? Theme.of(context).canvasColor
-                                      : Colors.transparent,
+                                  color: _skills.isNotEmpty ? Theme.of(context).canvasColor : Colors.transparent,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -429,16 +417,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       },
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4),
+                                      padding: const EdgeInsets.symmetric(horizontal: 4),
                                       child: Text(
                                         "Type and hit enter to add & click on skill to delete",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall!
-                                            .copyWith(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
+                                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                                              color: Theme.of(context).primaryColor,
                                             ),
                                       ),
                                     ),
@@ -452,24 +435,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             margin: const EdgeInsets.all(4),
                                             padding: const EdgeInsets.all(10),
                                             decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              color: Theme.of(context)
-                                                  .primaryColor,
+                                              borderRadius: BorderRadius.circular(15),
+                                              color: Theme.of(context).primaryColor,
                                             ),
                                             child: InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  _skills
-                                                      .remove(_skills[index]);
+                                                  _skills.remove(_skills[index]);
                                                 });
                                               },
                                               child: Center(
                                                 child: Text(
                                                   _skills[index],
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall,
+                                                  style: Theme.of(context).textTheme.titleSmall,
                                                 ),
                                               ),
                                             ),
@@ -483,12 +461,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 height: size.height * 0.04,
                               ),
                               Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                    0, 0, 0, size.height * 0.07),
+                                padding: EdgeInsets.fromLTRB(0, 0, 0, size.height * 0.07),
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    final isValid =
-                                        formKey.currentState!.validate();
+                                    final isValid = formKey.currentState!.validate();
                                     if (!isValid) return;
                                     FocusScope.of(context).unfocus();
 
@@ -510,9 +486,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     // print(_phoneNoController.text);
                                     // print(_addressController.text);
                                     user_data.updateData(data);
-                                    Navigator.pushNamed(
-                                        context, AccountScreen.routeName,
-                                        arguments: {"reload": true});
+                                    Navigator.pushNamed(context, AccountScreen.routeName, arguments: {"reload": true});
                                   },
                                   style: ElevatedButton.styleFrom(
                                     minimumSize: Size(
@@ -525,8 +499,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ),
                                   child: Text(
                                     "Save",
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
+                                    style: Theme.of(context).textTheme.titleMedium,
                                   ),
                                 ),
                               )

@@ -3,6 +3,7 @@ import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 import 'package:virtualarch/providers/userinfo_options_provider.dart';
 import '../../firebase/authentication.dart';
+import '../../firebase/firestore_database.dart';
 import '../../widgets/auth/custombuttontonext.dart';
 import '../../widgets/auth/customdecorationforinput.dart';
 import '../../widgets/customloadingspinner.dart';
@@ -49,8 +50,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   final _genderTextController = [];
   final List<String> _skills = [];
 
+  bool wrongReg = false;
+  bool wrongName = false;
+
   int currentStep = 0;
-  continueStep() {
+  continueStep() async {
     bool isLastStep = (currentStep == 2);
     if (isLastStep) {
       //Hides the keyboard.
@@ -73,11 +77,19 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       // End CircularProgressIndicator
       Navigator.of(context).pop();
     } else {
+      var reg = await FireDatabase.checkReg(_regNumberTextController.text);
+      var validName = await FireDatabase.checkName(_regNumberTextController.text, _nameTextController.text);
+
+      if (reg == true) {
+        wrongReg = false;
+      } else {
+        wrongReg = true;
+      }
+      validName == true ? wrongName = false : wrongName = true;
+      _nameKey.currentState!.validate();
+      _regNumKey.currentState!.validate();
       setState(() {
-        if (currentStep == 0 &&
-            _nameKey.currentState!.validate() &&
-            _regNumKey.currentState!.validate() &&
-            _expKey.currentState!.validate()) {
+        if (currentStep == 0 && _nameKey.currentState!.validate() && _regNumKey.currentState!.validate() && _expKey.currentState!.validate() && reg && validName) {
           setState(() {
             currentStep = 1;
           });
@@ -263,8 +275,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                           margin: const EdgeInsets.all(10),
                                           child: TextFormField(
                                             enabled: false,
-                                            decoration:
-                                                customDecorationForInput(
+                                            decoration: customDecorationForInput(
                                               context,
                                               args['email'],
                                               Icons.email_rounded,
@@ -283,13 +294,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                             }
                                             if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
                                               return 'Please enter alphabets only(spaces allowed)';
-                                            } 
+                                            }
+                                            if (wrongName) {
+                                              return "Entered name doesn't match with database name";
+                                            }
                                             return null; // Return null if the input is valid
                                             // Additional validation logic for project name if needed
                                           },
                                         ),
                                         // for(int i=0;i<value.length;i++){
-                                        //  if(!(value[i]>='a'&&value[i]<='z')||!(value[i]>='A'&&value[i]<='Z')||!(value[i]==" "))     
+                                        //  if(!(value[i]>='a'&&value[i]<='z')||!(value[i]>='A'&&value[i]<='Z')||!(value[i]==" "))
                                         // }
                                       ],
                                     ),
@@ -308,13 +322,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                             if (value!.isEmpty) {
                                               return 'Please enter Register Number(e.g.- GA/2001 )';
                                             }
-                                            final regex = RegExp(r'^[A-Z]{2}/\d{4}$');
+                                            final regex = RegExp(r'^[A-Z]{2}/\d{4}/\d{5}$');
                                             if (!regex.hasMatch(value)) {
                                               return 'Register Number must be in the format AB/YYYY (e.g.- GA/2001, GA is capital )';
                                             }
                                             final year = int.tryParse(value.split('/')[1]);
                                             if (year == null || year < 1900 || year > 9999) {
                                               return 'Please enter a valid year.';
+                                            }
+                                            if (wrongReg) {
+                                              return 'Registeration number doesnt exist';
                                             }
                                             // Additional validation logic for project name if needed
                                             return null; // Return null if the input is valid
@@ -331,7 +348,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                             }
                                             if (!RegExp(r'^\d+$').hasMatch(value)) {
                                               return 'Experience must be a positive number (e.g.- 10)';
-                                            } 
+                                            }
                                             return null; // Return null if the input is valid
                                             // Additional validation logic for project name if needed
                                           },
@@ -385,11 +402,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                           (value) {
                                             if (value!.isEmpty) {
                                               return 'Please enter your company name';
-                                            } 
+                                            }
                                             if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
                                               return 'Please enter alphabets only(spaces allowed)';
-                                            } 
-                                              return null; // Return null if the input is valid
+                                            }
+                                            return null; // Return null if the input is valid
                                             // Additional validation logic for project name if needed
                                           },
                                         ),
@@ -422,11 +439,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                           (value) {
                                             if (value!.isEmpty) {
                                               return 'Please enter your city';
-                                            } 
+                                            }
                                             if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
                                               return 'Please enter alphabets only(spaces allowed)';
-                                            } 
-                                              return null; // Return null if the input is valid
+                                            }
+                                            return null; // Return null if the input is valid
                                             // Additional validation logic for project name if needed
                                           },
                                         ),
@@ -441,8 +458,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                             }
                                             if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
                                               return 'Please enter alphabets only(spaces allowed)';
-                                            } 
-                                              return null; // Return null if the input is valid
+                                            }
+                                            return null; // Return null if the input is valid
                                             // Additional validation logic for project name if needed
                                           },
                                         ),
@@ -484,8 +501,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                             }
                                             if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
                                               return 'Please enter alphabets only(spaces allowed)';
-                                            } 
-                                              return null; // Return null if the input is valid
+                                            }
+                                            return null; // Return null if the input is valid
                                             // Additional validation logic for project name if needed
                                           },
                                         ),
@@ -516,8 +533,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                             controller: _aboutMeTextController,
                                             maxLength: 900,
                                             keyboardType: TextInputType.number,
-                                            decoration:
-                                                customDecorationForInput(
+                                            decoration: customDecorationForInput(
                                               context,
                                               "Tell us something about yourself",
                                               Icons.catching_pokemon,
@@ -525,8 +541,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                             minLines: 1,
                                             maxLines: 10,
                                             validator: (about) {
-                                              if (about != null &&
-                                                  about.isEmpty) {
+                                              if (about != null && about.isEmpty) {
                                                 return "Please add some content";
                                               } else {
                                                 return null;
@@ -538,25 +553,18 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                           width: 500,
                                           margin: const EdgeInsets.all(10),
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            color: _skills.isNotEmpty
-                                                ? Theme.of(context).canvasColor
-                                                : Colors.transparent,
+                                            borderRadius: BorderRadius.circular(15),
+                                            color: _skills.isNotEmpty ? Theme.of(context).canvasColor : Colors.transparent,
                                           ),
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               TextFormField(
                                                 key: _skillsKey,
-                                                controller:
-                                                    _skillsTextController,
-                                                keyboardType:
-                                                    TextInputType.number,
+                                                controller: _skillsTextController,
+                                                keyboardType: TextInputType.number,
                                                 maxLength: 15,
-                                                decoration:
-                                                    customDecorationForInput(
+                                                decoration: customDecorationForInput(
                                                   context,
                                                   "Add Skills",
                                                   Icons.add_moderator_outlined,
@@ -569,30 +577,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                                   }
                                                 },
                                                 onFieldSubmitted: (value) {
-                                                  _skillsKey.currentState!
-                                                      .validate();
+                                                  _skillsKey.currentState!.validate();
                                                   setState(() {
-                                                    if (!_skills
-                                                        .contains(value)) {
+                                                    if (!_skills.contains(value)) {
                                                       _skills.add(value);
                                                     }
-                                                    _skillsTextController.text =
-                                                        "";
+                                                    _skillsTextController.text = "";
                                                   });
                                                 },
                                               ),
                                               Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 4),
+                                                padding: const EdgeInsets.symmetric(horizontal: 4),
                                                 child: Text(
                                                   "Type and hit enter to add & click on skill to delete",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .labelSmall!
-                                                      .copyWith(
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
+                                                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                                                        color: Theme.of(context).primaryColor,
                                                       ),
                                                 ),
                                               ),
@@ -603,33 +602,22 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                                   children: List.generate(
                                                     _skills.length,
                                                     (index) => Container(
-                                                      margin:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              10),
+                                                      margin: const EdgeInsets.all(4),
+                                                      padding: const EdgeInsets.all(10),
                                                       decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
+                                                        borderRadius: BorderRadius.circular(15),
+                                                        color: Theme.of(context).primaryColor,
                                                       ),
                                                       child: InkWell(
                                                         onTap: () {
                                                           setState(() {
-                                                            _skills.remove(
-                                                                _skills[index]);
+                                                            _skills.remove(_skills[index]);
                                                           });
                                                         },
                                                         child: Center(
                                                           child: Text(
                                                             _skills[index],
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .titleSmall,
+                                                            style: Theme.of(context).textTheme.titleSmall,
                                                           ),
                                                         ),
                                                       ),
@@ -673,15 +661,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                 'password': args['password'],
                                 'architectName': _nameTextController.text,
                                 'architectType': _archTypeTextController[0],
-                                'architectRegisterNum':
-                                    _regNumberTextController.text,
-                                'architectExperience':
-                                    _experienceTextController.text,
+                                'architectRegisterNum': _regNumberTextController.text,
+                                'architectExperience': _experienceTextController.text,
                                 'architectGender': _genderTextController[0],
-                                'architectCompanyName':
-                                    _companyNameTextController.text,
-                                'architectStreetAddress':
-                                    _streetAddressTextController.text,
+                                'architectCompanyName': _companyNameTextController.text,
+                                'architectStreetAddress': _streetAddressTextController.text,
                                 'architectCity': _cityTextController.text,
                                 'architectState': _stateTextController.text,
                                 'architectZipCode': _zipNumTextController.text,
